@@ -1,8 +1,21 @@
 #!/usr/bin/env node
 
-var HTTPServer = require('../lib/http-server').HTTPServer;
+var HTTPServer = require('../lib/http-server').HTTPServer,
+    fs = require('fs'),
+    path = require('path'),
+    config = null;
 
-var httpServer = new HTTPServer();
+if (path.existsSync("./config.json")) {
+  console.log("Found configuration file ".green + "`./config.json`".cyan);
+
+  try {
+    config = JSON.parse(fs.readFileSync("./config.json").toString())
+  } catch (e) {
+    console.log("Error parsing ".red +"`./config.json`: ".cyan+("\""+e.message+"\"") + "; Ignoring.".yellow);
+  }
+}
+
+var httpServer = new HTTPServer(config);
 
 httpServer.start();
 
